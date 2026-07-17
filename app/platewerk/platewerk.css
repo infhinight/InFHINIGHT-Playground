@@ -1,0 +1,587 @@
+/**
+ * Converted from the original standalone jpg-png-to-svg.html.
+ *
+ * The source file used bare selectors (body, a, footer, *, ::selection,
+ * input[type=range]) that assumed it owned the whole page. Since this is
+ * now one route inside a larger app, every one of those is scoped under
+ * `.platewerk-app` so it can't leak onto the marketing site's header,
+ * footer, links, or form inputs. `spin` was renamed to `pw-spin` for the
+ * same reason (avoid colliding with any other `@keyframes spin` in the
+ * app). Nothing about the visual design was changed.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+.platewerk-app {
+  --ink: #1c1b1a;
+  --ink-2: #242220;
+  --ink-3: #302d2a;
+  --paper: #eeeae1;
+  --paper-dim: #c9c3b6;
+  --text: #ece7dd;
+  --text-dim: #9a948a;
+  --cyan: #00b6d6;
+  --magenta: #e8127a;
+  --yellow: #f4d000;
+  --red: #ff4433;
+  --line: #3a3733;
+  --radius: 3px;
+}
+
+.platewerk-app,
+.platewerk-app * {
+  box-sizing: border-box;
+}
+
+.platewerk-app {
+  background: var(--ink);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+.platewerk-app ::selection {
+  background: var(--cyan);
+  color: var(--ink);
+}
+
+.platewerk-app .mono {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.platewerk-app a {
+  color: inherit;
+}
+
+/* ---------- top bar : job ticket ---------- */
+.platewerk-app .topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--line);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.platewerk-app .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.platewerk-app .brand .mark {
+  width: 30px;
+  height: 30px;
+  position: relative;
+  flex: none;
+}
+.platewerk-app .brand .mark svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.platewerk-app .brand .word {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.platewerk-app .brand .tag {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.03em;
+  margin-top: 2px;
+}
+.platewerk-app .ticket {
+  display: flex;
+  gap: 22px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  flex-wrap: wrap;
+}
+.platewerk-app .ticket span b {
+  color: var(--text);
+  font-weight: 500;
+}
+.platewerk-app .ticket .dot {
+  color: var(--cyan);
+}
+
+/* ---------- layout ---------- */
+.platewerk-app .workbench {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 1px;
+  background: var(--line);
+  min-height: calc(100vh - 62px);
+}
+@media (max-width: 880px) {
+  .platewerk-app .workbench {
+    grid-template-columns: 1fr;
+  }
+}
+
+.platewerk-app .rail {
+  background: var(--ink-2);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  overflow-y: auto;
+}
+.platewerk-app .stage {
+  background: var(--ink);
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+
+.platewerk-app .section-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.platewerk-app .section-label::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--magenta);
+  display: inline-block;
+  border-radius: 50%;
+}
+
+/* ---------- drop zone ---------- */
+.platewerk-app .dropzone {
+  border: 1.5px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 26px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  position: relative;
+}
+.platewerk-app .dropzone:hover,
+.platewerk-app .dropzone.drag {
+  border-color: var(--cyan);
+  background: rgba(0, 182, 214, 0.06);
+}
+.platewerk-app .dropzone input {
+  display: none;
+}
+.platewerk-app .dropzone .icon {
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+.platewerk-app .dropzone .title {
+  font-size: 13px;
+  font-weight: 600;
+}
+.platewerk-app .dropzone .sub {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 5px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.platewerk-app .dropzone.has-file {
+  border-style: solid;
+  border-color: var(--paper-dim);
+}
+.platewerk-app .file-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.platewerk-app .file-chip b {
+  color: var(--text);
+}
+
+/* ---------- controls ---------- */
+.platewerk-app .field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.platewerk-app .field-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+}
+.platewerk-app .field-row .val {
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--yellow);
+  font-size: 11px;
+  background: var(--ink-3);
+  padding: 2px 7px;
+  border-radius: 2px;
+}
+.platewerk-app input[type='range'] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 2px;
+  background: var(--line);
+  border-radius: 2px;
+  outline: none;
+}
+.platewerk-app input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: 0 0 0 1px var(--cyan);
+  cursor: pointer;
+  margin-top: -6px;
+}
+.platewerk-app input[type='range']::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: 0 0 0 1px var(--cyan);
+  cursor: pointer;
+}
+
+.platewerk-app .seg {
+  display: flex;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.platewerk-app .seg button {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  padding: 8px 4px;
+  cursor: pointer;
+  border-left: 1px solid var(--line);
+  transition: background 0.15s, color 0.15s;
+}
+.platewerk-app .seg button:first-child {
+  border-left: none;
+}
+.platewerk-app .seg button.active {
+  background: var(--cyan);
+  color: var(--ink);
+  font-weight: 600;
+}
+.platewerk-app .seg button:hover:not(.active) {
+  background: var(--ink-3);
+  color: var(--text);
+}
+
+.platewerk-app .checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+.platewerk-app .checkbox-row input {
+  accent-color: var(--cyan);
+  width: 14px;
+  height: 14px;
+}
+
+.platewerk-app .btn {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 11px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--ink-3);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.platewerk-app .btn:hover {
+  border-color: var(--paper-dim);
+}
+.platewerk-app .btn:active {
+  transform: scale(0.98);
+}
+.platewerk-app .btn.primary {
+  background: var(--cyan);
+  border-color: var(--cyan);
+  color: var(--ink);
+}
+.platewerk-app .btn.primary:hover {
+  background: #12c6e8;
+}
+.platewerk-app .btn.primary:disabled {
+  background: var(--ink-3);
+  border-color: var(--line);
+  color: var(--text-dim);
+  cursor: not-allowed;
+}
+.platewerk-app .btn-row {
+  display: flex;
+  gap: 10px;
+}
+.platewerk-app .btn-row .btn {
+  flex: 1;
+}
+
+/* ---------- palette : ink plates ---------- */
+.platewerk-app .plates {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.platewerk-app .plate {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 8px;
+  background: var(--ink-3);
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+}
+.platewerk-app .plate .num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  width: 16px;
+  flex: none;
+}
+.platewerk-app .plate .swatch-wrap {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  flex: none;
+}
+.platewerk-app .plate .swatch-wrap input[type='color'] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.platewerk-app .plate .hex {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  flex: 1;
+}
+.platewerk-app .plate .pct {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+}
+.platewerk-app .plate.plate-hidden {
+  opacity: 0.45;
+}
+.platewerk-app .plate .bg-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--red);
+  border: 1px solid var(--red);
+  border-radius: 2px;
+  padding: 1px 5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  flex: none;
+}
+.platewerk-app .plates-empty {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  padding: 10px 2px;
+  line-height: 1.6;
+}
+
+/* ---------- stage / preview ---------- */
+.platewerk-app .stage-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.platewerk-app .view-toggle {
+  display: flex;
+  gap: 0;
+}
+
+.platewerk-app .canvas-frame {
+  position: relative;
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: linear-gradient(45deg, #26241f 25%, transparent 25%),
+    linear-gradient(-45deg, #26241f 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #26241f 75%),
+    linear-gradient(-45deg, transparent 75%, #26241f 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  background-color: #211f1c;
+  min-height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.platewerk-app .reg-mark {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.platewerk-app .reg-mark svg {
+  width: 100%;
+  height: 100%;
+}
+.platewerk-app .reg-mark.tl {
+  top: 10px;
+  left: 10px;
+}
+.platewerk-app .reg-mark.tr {
+  top: 10px;
+  right: 10px;
+}
+.platewerk-app .reg-mark.bl {
+  bottom: 10px;
+  left: 10px;
+}
+.platewerk-app .reg-mark.br {
+  bottom: 10px;
+  right: 10px;
+}
+
+.platewerk-app .canvas-frame img,
+.platewerk-app .canvas-frame svg.output {
+  max-width: calc(100% - 40px);
+  max-height: calc(100% - 40px);
+  display: block;
+}
+.platewerk-app .canvas-frame .placeholder {
+  text-align: center;
+  color: var(--text-dim);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  padding: 30px;
+  line-height: 1.7;
+}
+.platewerk-app .canvas-frame .placeholder .big {
+  font-family: 'Archivo Black', sans-serif;
+  color: var(--paper-dim);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.platewerk-app .loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(28, 27, 26, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+.platewerk-app .spinner {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  border-top-color: var(--cyan);
+  animation: pw-spin 0.7s linear infinite;
+}
+@keyframes pw-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.platewerk-app .loading-overlay .msg {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.platewerk-app .stats-strip {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.platewerk-app .stat {
+  flex: 1;
+  padding: 10px 14px;
+  border-left: 1px solid var(--line);
+}
+.platewerk-app .stat:first-child {
+  border-left: none;
+}
+.platewerk-app .stat .k {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.platewerk-app .stat .v {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px;
+  color: var(--text);
+  margin-top: 2px;
+}
+
+.platewerk-app .hint {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.platewerk-app footer {
+  padding: 16px 22px;
+  border-top: 1px solid var(--line);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  color: var(--text-dim);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .platewerk-app .spinner {
+    animation: none;
+  }
+  .platewerk-app .btn {
+    transition: none;
+  }
+}
