@@ -79,7 +79,7 @@ export function SiteHeader() {
 
           <ThemeToggle />
           <Button variant="ghost" size="sm" asChild>
-            <Link href="#">Log in</Link>
+            <Link href="./login">Log in</Link>
           </Button>
           <Button size="sm" asChild>
             <Link href="#">Sign up</Link>

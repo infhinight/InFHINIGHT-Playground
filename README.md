@@ -4,6 +4,8 @@ Scaffolding for the UpdateDraft marketing site. No section copy/UI has been
 built yet — this is the layout shell, sticky header, dark mode, and empty
 section placeholders ready to be filled in.
 
+[![GitHub Streak](https://streak-stats.demolab.com?user=infhinight&theme=radical&hide_border=true)](https://git.io/streak-stats)
+
 ## Stack
 
 - Next.js 14 (App Router) + TypeScript
